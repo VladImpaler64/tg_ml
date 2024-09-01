@@ -1,5 +1,5 @@
 import numpy as np
-from train_data import PreData
+from src.train_data import PreData
 
 
 class Perceptron(object):
@@ -57,68 +57,6 @@ class Perceptron(object):
         # self.w_ =
         return
 
-
-"""
-El tipo de clase será aburrido normal divertido
-con sus características x1(número de reacciones)  x2(número de comentarios)
-"""
-# data = np.array([[1, 2], [5, 10], [3, 5]])  # Cada entrada se suma en
-# entrada de red multiplicada por los pesos, y al final solo arroja un 1 o -1
-"""
-Queremos que sea multicapa, 0, 1, 2, entonces dividimos las pruebas en tres
-partes donde elegimos una como verdadera y las demás falsas
-"""
-# boring_p = Perceptron()
-# normal_p = Perceptron()
-# diver_p = Perceptron()
-
-# b_guess = np.array([1, -1, -1])  # Esto es y para contrastar con ŷ
-# n_guess = np.array([-1, -1, 1])
-# d_guess = np.array([-1, 1, -1])
-
-# Entrenar con distintos guess, necesito que me arrojen probabilidad
-# boring_p.fit(data, b_guess)
-# normal_p.fit(data, n_guess)
-# diver_p.fit(data, d_guess)
-
-
-# def tg_post_rating(data):
-
-#     result = []
-#     result.append(boring_p.predict_mult(data))
-#     result.append(normal_p.predict_mult(data))
-#     result.append(diver_p.predict_mult(data))
-#     print(result)
-
-#     max_p = result[0]
-#     index = 0
-
-#     for i, val in enumerate(result):
-#         if val > max_p:
-#             max_p = val
-#             index = i
-
-#     if index == 0:
-#         print("Boring")
-#     elif index == 1:
-#         print("Normal")
-#     else:
-#         print("Divertido")
-
-
-"""
-Cuando ya ha sido entrenada usamos el predict_multi
-"""
-
-# fresh_data = np.array([5, 19])
-# tg_post_rating(fresh_data)
-
-# print(f'El resultado de predecir [1, 1] es: {"Bajito" if p_entrenado.predict(
-#     np.array([1.5, 2.1])) == 1 else "Alto"}')
-"""
-¿Cómo sería para una que no sea clasificación binaria, el libro menciona algo
-de OvA one vs all (OvR one vs rest), investígalo
-"""
 
 """
 Entrenar multiclase
@@ -199,7 +137,7 @@ def start():
 
     # Haz la lógica para que se entre desde stdin
     parsed_input = parse_input(input(f'Make entry, comma separated, example: 200,23,15,6,54,14,2,23,3,1,0,3,4,0\n\n Categories: Channel Subs, Total Comments, Congruent Comments, Distinct Users, Word Count, Hour(24), Minutes, Positive Reactions, Negative Reactions, Actual Theme, Poll, Stars, Post Type, Hashtag:\n\n> '))
-    print(f'Classification for this post: {channel_classification(parsed_input, perceptrones, classes)}')
+    print(f'\nClassification for this post: {channel_classification(parsed_input, perceptrones, classes)}')
 
 
 start()

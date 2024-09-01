@@ -170,7 +170,7 @@ def channel_classification(entrada, perceptrones,
 def save_w(perceptrones: list):
     if input("¿Guardamos los pesos? (yes/no)") == "yes":
         for i, per in enumerate(perceptrones):
-            np.save(f'./pretrained{i}.npy', per.w_)
+            np.save(f'./pretrained/pretrained{i}.npy', per.w_)
 
 
 la_data = PreData("./tg_channels.csv").parse_csv()
@@ -190,23 +190,16 @@ def parse_input(text: str):
 
 
 def start():
-    if input("¿Archivos pre-entrenados? (yes, no)") == "yes":
-        perceptrones = []
+    perceptrones = []
 
-        for i in range(5):
-            nuevo = Perceptron()
-            nuevo.w_ = np.load(f'./pretrained{i}.npy')
-            perceptrones.append(nuevo)
+    for i in range(5):
+        nuevo = Perceptron()
+        nuevo.w_ = np.load(f'./pretrained/pretrained{i}.npy')
+        perceptrones.append(nuevo)
 
-        # Haz la lógica para que se entre desde stdin
-        parsed_input = parse_input(input(f'Make entry, comma separated, example:\n12,13,1,13,14,1,13,1\n Categories: Channel subs, total comments, congruent comments Distinct users, Word count, Hour(24), minutes, positive reactions, negative reactions, actual theme, poll, stars, post type, hashtag\n'))
-        if parse_input:
-            print(f'The classification of this post is: {channel_classification(parsed_input, perceptrones, classes)}')
-        else:
-            print(channel_classification(la_data[0][4], perceptrones, classes))
-    else:
-        print(channel_classification(la_data[0][4], multi_fit(la_data, 5),
-                                     classes, save_flag=True))
+    # Haz la lógica para que se entre desde stdin
+    parsed_input = parse_input(input(f'Make entry, comma separated, example: 200,23,15,6,54,14,2,23,3,1,0,3,4,0\n\n Categories: Channel Subs, Total Comments, Congruent Comments, Distinct Users, Word Count, Hour(24), Minutes, Positive Reactions, Negative Reactions, Actual Theme, Poll, Stars, Post Type, Hashtag:\n\n> '))
+    print(f'Classification for this post: {channel_classification(parsed_input, perceptrones, classes)}')
 
 
 start()

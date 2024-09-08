@@ -5,7 +5,7 @@ from src.train_data import PreData
 class Perceptron(object):
     # Si hay errores y estos suben debes bajar el eta
     # Y no se podría controlar en tiempo de ejecución el eta?
-    def __init__(self, eta=0.01, epocas=2500, random_state=51):  # 51
+    def __init__(self, eta=0.0001, epocas=4722, random_state=666):  # 51
         self.eta = eta
         self.epocas = epocas
         self.random_state = random_state
@@ -106,19 +106,10 @@ def channel_classification(entrada, perceptrones,
 
 
 def save_w(perceptrones: list):
-    if input("¿Guardamos los pesos? (yes/no)") == "yes":
+    inp_t = input("¿Guardamos los pesos? (yes/no)")
+    if inp_t == "yes" or inp_t == "y":
         for i, per in enumerate(perceptrones):
             np.save(f'./pretrained/pretrained{i}.npy', per.w_)
-
-
-la_data = PreData("./tg_channels.csv").parse_csv()
-classes = {
-    1: "Excelente",
-    2: "Bueno",
-    3: "Regular",
-    4: "Malo",
-    5: "Deficiente",
-}
 
 
 def parse_input(text: str):
@@ -128,16 +119,37 @@ def parse_input(text: str):
 
 
 def start():
+    from sys import argv
+
+    classes = {
+        1: "Excelente",
+        2: "Bueno",
+        3: "Regular",
+        4: "Malo",
+        5: "Deficiente",
+    }
+
     perceptrones = []
 
-    for i in range(5):
-        nuevo = Perceptron()
-        nuevo.w_ = np.load(f'./pretrained/pretrained{i}.npy')
-        perceptrones.append(nuevo)
+    if len(argv) > 1 and argv[1].split(' ')[0] == "--train":
+        print("Estamos entrenando nuevos datos")
+        perceptrones = multi_fit(PreData(f'./{argv[2]}')
+                                 .parse_csv(), len(classes))
+    else:
+        for i in range(5):
+            nuevo = Perceptron()
+            nuevo.w_ = np.load(f'./pretrained/pretrained{i}.npy')
+            perceptrones.append(nuevo)
 
     # Haz la lógica para que se entre desde stdin
-    parsed_input = parse_input(input(f'Make entry, comma separated, example: 200,23,15,6,54,14,2,23,3,1,0,3,4,0\n\n Categories: Channel Subs, Total Comments, Congruent Comments, Distinct Users, Word Count, Hour(24), Minutes, Positive Reactions, Negative Reactions, Actual Theme, Poll, Stars, Post Type, Hashtag:\n\n> '))
-    print(f'\nClassification for this post: {channel_classification(parsed_input, perceptrones, classes)}')
+    parsed_input = parse_input(input('Make entry, comma separated, \
+example: 200,23,15,6,54,14,2,23,3,1,0,0,0,3,0,0,4,8,33,0\n\n Categories: \
+Channel Subs, Total Comments, Congruent Comments, Distinct Users, Word Count, \
+Hour(24), Minutes, Positive Reactions, Negative Reactions, Actual Theme, Poll,\
+Stars, Post Type, Hashtag:\n\n> '))
+    print(f'\nClassification for this post: \
+{channel_classification(parsed_input, perceptrones, classes,
+                        (len(argv) > 1 and argv[1] == "--train"))}')
 
 
 start()

@@ -24,6 +24,8 @@ evalua la entrada con las cinco clases (Excelente, Bueno, Regular, Malo, Deficie
 - Encuesta: ¿Se agregó una encuesta en los comentarios?, binario, ej. 0 no se agregó
 - Estrellas: Número de estrellas (el token para dar propinas en Telegram), ej. 3 obtuvo tres estrellas 
 - Tipo de Post: Para este punto se debe juzgar en base a las siguientes categorías, ej 4 es un post personal
+> Nota: Se cambia esto por un hot encoding, se agregan cinco parámetros más representando el tipo de post(binario), quedaría 
+como 0, 0, 0, 1, 0, presencia de tipo 4, personal
 
 ### Tipo de post
 
@@ -66,12 +68,15 @@ Colaboraciones: Presentaciones de otros canales o usuarios.
 Agradecimientos: Reconocimiento a los miembros activos de la comunidad.
 
 - Hashtag: ¿Tiene hashtags?, ej. **0** No tiene ningún hashtag
+> Añadimos algo de feature engineering
+- Correlación Usuarios_Canal:Comentarios, cantidad, ej. trunc(200 / 23) **8**
+- Correlación Usuarios_Canal:Usuarios_Distintos, ej. trunc(200 / 6) **33**
 
 > Nota: El órden de los parámetros es importante y que estén los 14 parámetros, si
 no se tiene información dejarlo en 0, ej. si no hay comentarios
 
 De lo anterior obtenemos el input(14 parámetros) para el modelo, separado por comas (tipo csv) 
-    `200,23,15,6,54,14,2,23,3,1,0,3,4,0`
+    `200,23,15,6,54,14,2,23,3,1,0,0,0,3,0,0,4,8,33,0`
 ## Comando para usarlo
 
 Antes que nada debes hacer un:
@@ -123,8 +128,7 @@ Desactualizado: Publicaciones que ya no son relevantes debido a que la informaci
 Poco atractivo: Contenido visualmente poco atractivo o con un diseño pobre.
 
 ### Consideraciones
-- ~~El modelo ya está entrenado, si se desea entrenar agregar los flag **--train** y
-**--path <path>**~~
+- El modelo ya está entrenado, si se desea entrenar agregar la flag **--train <path>**
 > Esto queda pendiente
 - Los archivos que contienen los pesos están númerados por cada clase, en la carpeta pretrained
 - Algunas entradas al modelo dependen de juicio subjetivo por 

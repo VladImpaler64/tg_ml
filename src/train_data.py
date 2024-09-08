@@ -6,7 +6,6 @@ class PreData():
         self.path = path
 
     def parse_csv(self):
-
         train_data: list
         with open(self.path, 'r') as f:
             reader = csv.reader(f)
@@ -15,6 +14,23 @@ class PreData():
                 for j, x in enumerate(row):
                     train_data[i][j] = int(x)
         self.data_ = train_data
+        # Preprocessning: Feature enginering and hot encoding
+        """
+        Nota: Este paso se hace aparte, es el trabajo de un data analyst
+        """
+        for muestra in self.data_:
+            y = muestra[-1]
+            subs = muestra[0]
+            comment = muestra[1]
+            dist_usr = muestra[3]
+            # Correlación Usuarios_Canal:Comentarios
+            muestra[-1] = subs - (subs - comment)
+            # Correlación Usuarios_Canal:Usuarios_Distintos
+            muestra.append(subs - (subs - dist_usr))
+            print(muestra)
+
+            muestra.append(y)
+
         return self.prepare()
 
     def prepare(self) -> tuple:
